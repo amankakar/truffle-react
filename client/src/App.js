@@ -55,15 +55,17 @@ class App extends Component {
         console.error(error);
         return;
       }
-      instance
-        .set(result[0].hash, { from: this.state.accounts[0], gas: "1000000" })
-        .then(r => {
-          return instance.get.call(this.state.accounts[0]);
-        })
-        .then(ipfsHash => {
-          this.setState({ ipfsHash });
-          console.log("ipfsHash:", ipfsHash);
-        });
+      instance.set(result[0].hash, {
+        from: this.state.accounts[0],
+        gas: "1000000"
+      });
+      // .then(r => {
+      //   return instance.get.call(this.state.accounts[0]);
+      // })
+      // .then(ipfsHash => {
+      //   this.setState({ ipfsHash });
+      //   console.log("ipfsHash:", ipfsHash);
+      // });
     });
   };
   captureFile = event => {

@@ -3,6 +3,7 @@ import SimpleStorageContract from "./contracts/SimpleStorage.json";
 import getWeb3 from "./utils/getWeb3";
 import truffleContract from "truffle-contract";
 import ipfs from "./ipfs";
+import { Document, Page } from "react-pdf";
 
 import "./App.css";
 
@@ -18,7 +19,9 @@ class App extends Component {
     web3: null,
     accounts: null,
     instance: null,
-    buffer: null
+    buffer: null,
+    numPages: null,
+    pageNumber: 1
   };
 
   componentDidMount = async () => {
@@ -86,6 +89,9 @@ class App extends Component {
     console.log("ipfsHash.", hash);
   };
 
+  onDocumentLoad = ({ numPages }) => {
+    this.setState({ numPages });
+  };
   // runExample = async () => {
   //   const { accounts, contract } = this.state;
   //
@@ -100,6 +106,7 @@ class App extends Component {
   // };
 
   render() {
+    const { pageNumber, numPages } = this.state;
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
@@ -113,6 +120,12 @@ class App extends Component {
           src={`https://ipfs.io/ipfs/${this.state.ipfsHash}`}
           alt=""
         />
+        <Document
+          file={`https://ipfs.io/ipfs/${this.state.ipfsHash}`}
+          onLoadSuccess={this.onDocumentLoad}
+        >
+          <Page pageNumber={pageNumber} />
+        </Document>
         <form onSubmit={this.onSubmit}>
           <input type="file" onChange={this.captureFile} />
           <input type="submit" />

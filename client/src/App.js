@@ -47,7 +47,7 @@ class App extends Component {
     }
   };
 
-  onSubmit = event => {
+  onSubmit = async event => {
     const { accounts, instance } = this.state;
     event.preventDefault();
     ipfs.files.add(this.state.buffer, (error, result) => {
@@ -61,8 +61,8 @@ class App extends Component {
           return instance.get.call(this.state.accounts[0]);
         })
         .then(ipfsHash => {
-          this.setState({ ipfsHash: result[0].hash });
-          console.log("ipfsHash:", this.state.ipfsHash);
+          this.setState({ ipfsHash });
+          console.log("ipfsHash:", ipfsHash);
         });
     });
   };
@@ -75,6 +75,13 @@ class App extends Component {
       this.setState({ buffer: Buffer(reader.result) });
       console.log("buffer:", this.state.buffer);
     };
+  };
+  onClick = async event => {
+    event.preventDefault();
+    const { accounts, instance } = this.state;
+    const hash = await instance.get.call();
+    this.setState({ ipfsHash: hash });
+    console.log("ipfsHash.", hash);
   };
 
   // runExample = async () => {
@@ -108,6 +115,8 @@ class App extends Component {
           <input type="file" onChange={this.captureFile} />
           <input type="submit" />
         </form>
+
+        <button onClick={this.onClick}>get image</button>
       </div>
     );
   }
